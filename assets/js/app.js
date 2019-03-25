@@ -28,7 +28,7 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // import data
-d3.csv("assets/data/data.csv", function(error, healthData) {
+d3.csv("assets/data/data.csv").then(function( healthData,error) {
     if (error) throw error;
 
     console.log(healthData)
@@ -41,13 +41,14 @@ d3.csv("assets/data/data.csv", function(error, healthData) {
     
     // create scales
     var yScale = d3.scaleLinear()
-        .domain([d3.min(healthData, d => d.healthcare),d3.max(healthData, d => d.healthcare)])
+        // .domain([d3.min(healthData, d => d.healthcare),d3.max(healthData, d => d.healthcare)])
+        .domain([d3.min(healthData, d => d.healthcare)-1,d3.max(healthData, d => d.healthcare)])
         // .domain([4,26])
         .range([chartHeight, 0])
     
     var xScale = d3.scaleLinear()
         // .domain([0,d3.max(healthData, d => d.poverty)])
-        .domain([d3.min(healthData, d => d.poverty), d3.max(healthData, d => d.poverty)])
+        .domain([d3.min(healthData, d => d.poverty)-1, d3.max(healthData, d => d.poverty)])
         .range([0, chartWidth])
 
     // create and append axis
@@ -115,4 +116,4 @@ d3.csv("assets/data/data.csv", function(error, healthData) {
         // .on("mouseout", function(d) {
         //   toolTip.show(d);
         // })
-})
+}).catch(function(error) { console.log(error)});
